@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, process, Forms, Controls, Graphics, Dialogs, ExtCtrls,
-  StdCtrls;
+  StdCtrls, Interfaces;
 
 type
 
@@ -50,10 +50,11 @@ begin
   try
     with Process do begin
       CurrentDirectory := ExtractFilePath(Application.ExeName);
+      Executable := GetEnvironmentVariable('COMSPEC');
       Execute;
       repeat
         OS := Output.Read(Buffer^, BS);
-        ShowMessage(Format('OS = %d, BS = %d', [OS, BS]));
+        {ShowMessage(Format('OS = %d, BS = %d', [OS, BS]));}
         if OS > 0 then S.Write(Buffer^, OS)
         {else Sleep(1000);}
       until (OS = 0) and not Running;
@@ -76,23 +77,20 @@ var
 procedure WriteLine(S: string);
 begin
   Image1.Canvas.TextOut(X, Y, S);
-  Inc(Y, Canvas.TextHeight(S));
+  Inc(Y, Image1.Canvas.TextHeight(S));
 end;
 begin
-  Image1.Canvas.Font.Height := 16;
+  Image1.Canvas.Font.Height := 24;
   Image1.Canvas.Font.Color := clYellow;
-  {i := 0; Y := 0;
-  while Y < Image1.Height do begin
-    if i >= List.Count then Break;
-    Image1.Canvas.TextOut(0, Y, List[i]);
-    i := i + 1;
-    Y := Y + Image1.Canvas.Font.Height + 4
-  end;}
+  Image1.Canvas.Font.Italic := True;
+  Image1.Canvas.Brush.Color := clBlack;
   X := 8; Y := 8;
   WriteLine('Hello!');
-  WriteLine('Go to our chat!');
-  WriteLine('Then press [Ctrl] + [V] on your Keyboard! This inserts your system description');
-  WriteLine('Then send the message with your system description!')
+  WriteLine('This is Nancy.');
+  WriteLine('So you can send me information about your system:');
+  WriteLine('1) Go to our chat like for writing a message!');
+  WriteLine('2) Instead of writing press [Ctrl] + [V] on your Keyboard! This inserts your system description');
+  WriteLine('3) Then send the message with your system description!')
 end;
 
 end.
